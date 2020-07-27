@@ -1,1 +1,1 @@
-# ReSGait-The-real-scene-gait-dataset
+# ReSGait: The real scene gait dataset
