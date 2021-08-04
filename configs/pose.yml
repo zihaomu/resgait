@@ -1,0 +1,65 @@
+# conf is the parameter in whole experiments
+# this also the first part of this project. 
+# all options are listed in the following.
+
+# in train.py file, we can dirctly asign a training or testing file.
+
+# base parameters
+
+
+WORK_PATH: "/home/User/xxx/resgait"   # the root path of this project
+writer : 'Path_to_tensorlog'   # None
+writer_name : 'config/test'
+
+# dataset
+
+data:
+    name: "pose"    # options: pose, silhouette, GEI
+    dir: "Path_TO_Downloading_dataset/pose"
+    cache: True   # whether to use a caching strategy
+    cache_path: "Path_to_save_cache_data"
+    pid_num: 86
+    num_classes : 86
+    pid_shuffle: True
+    resolution: 64
+    frame_num: 32   # length of subseuqence of mat_data
+    num_workers: 4
+    drop_last: False
+    collate_fn: "pose" # pose can only use pose
+    sampler: "weight"   # options: batch and weight
+
+model:
+    name: 'PoseNet_new'  # options: PoseNet, PoseNet_no_normal, PoseNet_ft, PoseNet_new
+
+train:
+    restore_iter: 0  # checkpoint
+    num_epochs: 4000
+    num_grad_acc: 5
+    batch_size:
+        batch1: 64
+        batch2: 8
+
+test:
+    epoch: 1899
+    evaluator: 'l2'
+    sampler: 'seq_fix'      # options: seq -> batch sampler, video -> sequntial
+    gallery_model: "fix"  # options: fix, random,
+    vote: False
+    result_save : Ture
+    result_name: 'result_seq_fix_vote.txt'
+
+optimizer:
+    name: 'adam'  # options: "adam" and "sgd"
+    params:
+        lr: 0.0001
+
+
+scheduler:
+    name: 'step' # step, multistep, exponential
+
+
+loss:
+    name: 'softmax_center' # cross_entropy, softmax_center, cross_weight
+    params:
+        gamma: 0.0008
+

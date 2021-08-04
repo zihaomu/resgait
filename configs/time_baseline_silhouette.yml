@@ -1,0 +1,66 @@
+# conf is the parameter in whole experiments
+# this also the first part of this project. 
+# all options are listed in the following.
+
+# in train.py file, we can dirctly asign a training or testing file.
+
+# base parameters
+
+
+WORK_PATH: "/home/User/xxx/resgait"   # the root path of this project
+CUDA_VISIBLE_DEVICES: "1,2"
+writer : 'Path_of_Tensorlog'  # None
+writer_name : 'config/test'
+time_span : True # for Time span Exp only.
+# dataset
+
+data:
+    name: "silhouette"    # options : pose, silhouette, GEI
+    dir: "Path_TO_Downloading_dataset/silhouette"
+    cache: True   # whether to use a caching strategy
+    cache_path: "Path_to_save_cache_data"
+    pid_num: 86 
+    num_classes : 100
+    pid_shuffle: True
+    resolution: 64
+    frame_num: 28
+    num_workers: 4
+    drop_last: False
+    collate_fn: 'clip' # options of data type : pose for pose data, clip and select are for image data 
+    sampler: "weight"   # options: batch and weight
+    appendix: "normalization"     # 'normalization'
+
+model:
+    name: 'SilhouetteNormal'  # options: SilhouetteNormal, SilhouetteDeep
+
+train:
+    restore_iter: 0  # checkpoint
+    num_epochs: 8000
+    num_grad_acc: 5
+    batch_size:
+        batch1: 16
+        batch2: 8
+
+test:
+    epoch: 6999
+    evaluator: 'l2'
+    sampler: 'seq_fix'        # options: seq -> batch sampler, video -> sequntial
+    gallery_model: "fix"  # options: fix, random,
+    result_save : Ture
+    result_name: 'result_seq_fix_vote.txt'
+
+optimizer:
+    name: 'adam'  # options: "adam" and "sgd"
+    params:
+        lr: 0.0001
+
+
+scheduler:
+    name: 'step' # step, multistep, exponential
+
+
+loss:
+    name: 'cross_entropy' # cross_entropy, softmax_center, cross_weight
+    params:
+        gamma: 0.0008
+

@@ -1,0 +1,68 @@
+# conf is the parameter in whole experiments
+# this also the first part of this project. 
+# all options are listed in the following.
+
+# in train.py file, we can dirctly asign a training or testing file.
+
+# base parameters
+# acc-1 =40
+# acc-5 = 98
+WORK_PATH: "/home/User/xxx/resgait"   # the root path of this project
+CUDA_VISIBLE_DEVICES: "8,9"
+writer : 'Path_to_tensorlog'  # None
+writer_name : 'config/test'
+# dataset
+
+data:    
+    name: "silhouette_OUMVLP"    # options : pose, silhouette, GEI, OUMVPL
+    dataset: "OUMVLP"
+    dir: "Path_TO_Downloading_dataset/silhouette"
+    cache: True   # whether to use a caching strategy
+    cache_path: "Path_to_save_cache_data"
+    pid_num: 1000
+    num_classes : 1000
+    pid_shuffle: True
+    resolution: 64
+    frame_num: 28
+    num_workers: 4
+    drop_last: False
+    collate_fn: 'clip_OUMVLP' # options of data type : pose for pose data, clip and select are for image data
+    sampler: "weight"   # options: batch and weight
+    appendix: "normalization"     # 'normalization'
+
+model:
+    name: 'SilhouetteNormal_new_label'  # options: SilhouetteNormal, SilhouetteDeep
+
+train:
+    restore_iter: 0  # checkpoint
+    num_epochs: 4000
+    center_wight: 1
+    num_grad_acc: 5
+    batch_size:
+        batch1: 16
+        batch2: 8
+
+test:
+    epoch: 999
+    evaluator: 'l2'
+    sampler: 'seq_fix'        # options: seq -> batch sampler, video -> sequntial
+    gallery_model: "fix"  # options: fix, random,
+    result_save : Ture
+    result_name: 'result_seq_fix_vote.txt'
+
+optimizer:
+    name: 'adam'  # options: "adam" and "sgd", "adamw"
+    weight_decay: 0.05
+    params:
+        lr: 0.001
+
+
+scheduler:
+    name: 'step' # step, multistep, exponential, none
+
+
+loss:
+    name: 'softmax_center' # cross_entropy, softmax_center, cross_weight
+    params:
+        gamma: 0.0008
+

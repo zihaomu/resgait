@@ -1,0 +1,61 @@
+# This config is for pre-trainning model of OUMVLP dataset.
+# If you want to train model based OU-MVLP, please download OU-MVLP dataset first.
+# Link:http://www.am.sanken.osaka-u.ac.jp/BiometricDB/GaitMVLP.html
+
+WORK_PATH: "/home/User/xxx/resgait"   # the root path of this project
+writer : 'Path_to_tensorlog'   # None
+writer_name : 'config/test'
+
+# dataset
+
+data:    
+    name: "pose_OUMVLP"    # options: pose, silhouette, GEI
+    dataset: "pose_OUMVLP"
+    dir: "Path_TO_Downloading_dataset/pose"
+    cache: True   # whether to use a caching strategy
+    cache_path: "Path_to_save_cache_data"
+    pid_num: 2000
+    num_classes : 2000
+    pid_shuffle: True
+    resolution: 64
+    frame_num: 32   # length of subseuqence of mat_data
+    num_workers: 4
+    drop_last: False
+    collate_fn: "pose" # pose can only use pose
+    sampler: "weight"   # options: batch and weight
+
+model:
+    name: 'PoseNet_new'  # options: PoseNet, PoseNet_no_normal
+
+train:
+    restore_iter: 0  # checkpoint
+    num_epochs: 4000
+    num_grad_acc: 5
+    batch_size:
+        batch1: 64
+        batch2: 2
+
+test:
+    epoch: 899
+    evaluator: 'l2'
+    sampler: 'seq_fix'      # options: seq -> batch sampler, video -> sequntial
+    gallery_model: "fix"  # options: fix, random,
+    vote: False
+    result_save : Ture
+    result_name: 'result_seq_fix_vote.txt'
+
+optimizer:
+    name: 'adam'  # options: "adam" and "sgd"
+    params:
+        lr: 0.001
+
+
+scheduler:
+    name: 'step' # step, multistep, exponential
+
+
+loss:
+    name: 'cross_entropy' # cross_entropy, softmax_center, cross_weight
+    params:
+        gamma: 0.0008
+
